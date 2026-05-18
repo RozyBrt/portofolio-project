@@ -13,6 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://portofolio-project-jade.vercel.app'),
   title: "Rozy Berutu | Portofolio Projects",
   description: "Portofolio profesional Rozy Berutu",
 };
