@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Rozy Berutu | Software Engineer & Tech Writer",
-  description: "Portofolio profesional Rozy Berutu - Software Engineer yang berfokus pada pembangunan aplikasi web berkinerja tinggi dan penulisan jurnal koding yang mendalam.",
+  title: "Rozy Berutu | Portofolio Projects",
+  description: "Portofolio profesional Rozy Berutu",
 };
 
 export default function RootLayout({
