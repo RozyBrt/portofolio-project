@@ -35,7 +35,7 @@ export default async function ProjectsPage() {
             <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
             Kembali ke Beranda
           </Link>
-          <h1 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-5xl font-extrabold bg-linear-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">
             Selected Projects
           </h1>
           <p className="text-slate-400 text-lg max-w-2xl">

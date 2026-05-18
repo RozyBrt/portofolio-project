@@ -135,7 +135,7 @@ export default function HomeContent({ featuredProjects }: HomeContentProps) {
         {/* Spotify Section */}
         <motion.section variants={item} className="space-y-6">
           <h3 className="text-xl font-bold flex items-center gap-2">
-            <span className="w-8 h-[1px] bg-emerald-500" />
+            <span className="w-8 h-px bg-emerald-500" />
             Vibes Saat Ini
           </h3>
           <SpotifyWidget />

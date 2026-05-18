@@ -243,7 +243,7 @@ export default function GuestbookClient({ initialEntries }: GuestbookClientProps
       {/* Entries Section */}
       <div className="space-y-6">
         <h3 className="text-xl font-bold flex items-center gap-2 text-slate-200">
-          <span className="w-8 h-[1px] bg-blue-500" />
+          <span className="w-8 h-px bg-blue-500" />
           Pesan Masuk ({entries.length})
         </h3>
 
@@ -265,7 +265,7 @@ export default function GuestbookClient({ initialEntries }: GuestbookClientProps
                     {formatDate(entry.created_at)}
                   </span>
                 </div>
-                <p className="text-slate-400 leading-relaxed whitespace-pre-wrap break-words">
+                <p className="text-slate-400 leading-relaxed whitespace-pre-wrap wrap-break-word">
                   {entry.message}
                 </p>
               </motion.div>
@@ -305,7 +305,7 @@ export default function GuestbookClient({ initialEntries }: GuestbookClientProps
               <div className="bg-slate-950/40 border border-slate-800/80 rounded-2xl p-4 mb-6 space-y-2 text-left relative overflow-hidden">
                 <div className="text-[10px] text-blue-400 font-bold uppercase tracking-wider">Pratinjau</div>
                 <div className="font-bold text-slate-200 text-sm">{name.trim()}</div>
-                <p className="text-slate-400 text-xs whitespace-pre-wrap leading-relaxed max-h-36 overflow-y-auto break-words">{message.trim()}</p>
+                <p className="text-slate-400 text-xs whitespace-pre-wrap leading-relaxed max-h-36 overflow-y-auto wrap-break-word">{message.trim()}</p>
               </div>
 
               <div className="flex gap-4">
