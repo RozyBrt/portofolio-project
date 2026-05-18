@@ -1,36 +1,136 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 FACHRUR ROZI SYAH PUTRA BERUTU — Professional Portfolio
 
-## Getting Started
+Portofolio digital premium berkinerja tinggi yang dirancang dengan estetika *dark minimalist* modern dan didukung oleh tipe data yang sangat ketat (*Strict TypeScript*). Aplikasi ini terintegrasi penuh secara dinamis dengan database **Supabase** untuk melacak kunjungan halaman, mempublikasikan status saat ini, dan merender gambar Open Graph (OG) secara instan.
 
-First, run the development server:
+🌐 **Live Demo:** [portofolio-project-jade.vercel.app](https://portofolio-project-jade.vercel.app)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 🛠️ Tech Stack & Architecture
+
+*   **Framework:** [Next.js 16 (App Router)](https://nextjs.org/) dengan Turbopack untuk kompilasi ultra-cepat.
+*   **Bahasa:** [TypeScript](https://www.typescriptlang.org/) dengan konfigurasi *Strict Mode* 100% aman tanpa kontaminasi tipe `any`.
+*   **Database & Auth:** [Supabase](https://supabase.com/) (PostgreSQL) menggunakan koneksi Serverless Secure API.
+*   **Styling & Animasi:** [Tailwind CSS](https://tailwindcss.com/) & [Framer Motion](https://www.framer.com/motion/) untuk transisi navigasi melayang yang halus dan efek *glassmorphism*.
+*   **Social Previews:** [Satori (Next.js ImageResponse)](https://github.com/vercel/satori) di-render di Edge Runtime untuk menghasilkan gambar sosial media dinamis.
+
+---
+
+## ⚡ Fitur Unggulan
+
+### 1. 👁️ Real-Time View Counter (Anti-Spam)
+Menghitung jumlah kunjungan unik pada detail proyek dan blog menggunakan fungsi **Supabase RPC (`increment_view`)** yang dilewatkan melalui API internal server-side.
+*   Dilengkapi dengan perlindungan **anti-spam** menggunakan `sessionStorage` di sisi browser, mencegah manipulasi angka kunjungan akibat refresh halaman berulang.
+
+### 2. 🌌 Dynamic /now Page (Live Status updates)
+Halaman dinamis `/now` yang terinspirasi oleh gerakan global *nownownow*. Memungkinkan pemilik web untuk memperbarui fokus utama, lokasi, dan aktivitas saat ini secara instan langsung dari database Supabase tanpa harus memodifikasi kode frontend.
+
+### 🖼️ 3. Dynamic OG (Open Graph) Images
+Sistem otomatis yang merender kartu pratinjau sosial media beresolusi tinggi (`1200x630` PNG) untuk landing page, detail proyek, dan detail blog.
+*   **Bagaimana cara kerjanya?** Sistem akan mengeksekusi *metadata query* secara dinamis dari database, menarik judul, deskripsi, atau tagline, dan menyajikannya secara *pixel-perfect* di atas pendaran efek *neon-glow* yang mewah saat link web Anda dibagikan di LinkedIn, Twitter, WhatsApp, atau Discord.
+
+### 🔒 4. Production-Ready Deployment Hardening
+Kode dioptimalkan sepenuhnya agar lolos standar kompilasi Vercel yang sangat ketat. Struktur database diketik secara kuat (*strongly typed*), mencegah kegagalan *building* akibat *stale generic types* atau kegagalan *type inference*.
+
+---
+
+## ⚙️ Environment Variables Checklist
+
+Buat file `.env.local` di folder root komputer Anda, dan masukkan konfigurasi berikut (juga tambahkan konfigurasi ini di dashboard Vercel Anda):
+
+```env
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+
+# Spotify Widget Configuration (Optional)
+SPOTIFY_CLIENT_ID=your_spotify_client_id
+SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
+SPOTIFY_REFRESH_TOKEN=your_spotify_refresh_token
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🗄️ Supabase Database Schema
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Untuk mengaktifkan seluruh fitur dinamis secara sempurna, jalankan perintah SQL ini di dalam **SQL Editor** pada dashboard Supabase Anda:
 
-## Learn More
+### 1. Skema Tabel `/now` Page
+```sql
+CREATE TABLE IF NOT EXISTS now_status (
+  id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+  headline text NOT NULL,
+  location text NOT NULL,
+  focus text[] NOT NULL,
+  updated_at timestamp with time zone DEFAULT now()
+);
 
-To learn more about Next.js, take a look at the following resources:
+ALTER TABLE now_status ENABLE ROW LEVEL SECURITY;
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+CREATE POLICY "Public can read now_status" 
+  ON now_status FOR SELECT USING (true);
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 2. Skema Tabel & Fungsi View Counter
+```sql
+CREATE TABLE IF NOT EXISTS page_views (
+  slug text PRIMARY KEY,
+  count bigint DEFAULT 0
+);
 
-## Deploy on Vercel
+ALTER TABLE page_views ENABLE ROW LEVEL SECURITY;
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+CREATE POLICY "Public can read page_views" 
+  ON page_views FOR SELECT USING (true);
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+-- Fungsi increment otomatis aman
+CREATE OR REPLACE FUNCTION increment_view(page_slug text)
+RETURNS bigint AS $$
+DECLARE
+  current_count bigint;
+BEGIN
+  INSERT INTO page_views (slug, count)
+  VALUES (page_slug, 1)
+  ON CONFLICT (slug)
+  DO UPDATE SET count = page_views.count + 1
+  RETURNING count INTO current_count;
+  
+  RETURN current_count;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+```
+
+---
+
+## 🚀 Instalasi Lokal
+
+1. **Clone Repositori:**
+   ```bash
+   git clone https://github.com/RozyBrt/portofolio-project.git
+   cd portofolio-project
+   ```
+
+2. **Instal Dependensi:**
+   ```bash
+   npm install
+   ```
+
+3. **Jalankan Server Pengembangan:**
+   ```bash
+   npm run dev
+   ```
+   Buka [http://localhost:3000](http://localhost:3000) di browser Anda untuk melihat hasilnya.
+
+4. **Kompilasi Produksi:**
+   ```bash
+   npm run build
+   ```
+
+---
+
+## 📄 Lisensi
+
+Proyek ini berada di bawah lisensi MIT. Anda bebas menggunakannya dan memodifikasinya untuk kebutuhan portofolio pribadi Anda. 
+
+Dibuat dengan 💻 dan ☕ oleh **Fachrur Rozi Syah Putra Berutu**.
