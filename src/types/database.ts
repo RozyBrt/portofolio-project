@@ -72,6 +72,18 @@ export interface Database {
         Update: { [key: string]: Json | undefined }
         Relationships: []
       }
+      now_status: {
+        Row: {
+          id: string
+          headline: string
+          location: string
+          focus: string[]
+          updated_at: string | null
+        }
+        Insert: { [key: string]: Json | undefined }
+        Update: { [key: string]: Json | undefined }
+        Relationships: []
+      }
     }
     Views: {
       [_ in string]: {
