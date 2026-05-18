@@ -173,10 +173,11 @@ export default function HomeContent({ featuredProjects }: HomeContentProps) {
           className="pt-20 border-t border-slate-900 text-slate-600 text-sm flex flex-col md:flex-row justify-between gap-4"
         >
           <p>© 2026 RozyBrt. Built with Next.js, Tailwind & Passion.</p>
-          <div className="flex gap-6">
-            <Link href="/blog" className="hover:text-slate-400 transition-colors">Blog</Link>
+          <div className="flex flex-wrap gap-4 sm:gap-6 justify-center md:justify-end">
             <Link href="/projects" className="hover:text-slate-400 transition-colors">Projects</Link>
-            <Link href="/about" className="hover:text-slate-400 transition-colors">About</Link>
+            <Link href="/blog" className="hover:text-slate-400 transition-colors">Blog</Link>
+            <Link href="/now" className="hover:text-slate-400 transition-colors">Now</Link>
+            <Link href="/guestbook" className="hover:text-slate-400 transition-colors">Guestbook</Link>
           </div>
         </motion.footer>
       </motion.div>
