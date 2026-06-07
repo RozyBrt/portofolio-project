@@ -15,7 +15,7 @@ export default async function BlogPage() {
     .from('posts')
     .select('*')
     .eq('published', true)
-    .order('published_at', { ascending: false })
+    .order('created_at', { ascending: false })
     
   const posts = data as Post[] | null
 
